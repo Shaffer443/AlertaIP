@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
 from win10toast import ToastNotifier
-from datetime import datetime
+from datetime import datetime, date
 import logging
 import os
+
 
 app = Flask(__name__)
 
@@ -15,14 +16,42 @@ agora = datetime.now()
 
 # Formata a data e o horário no formato desejado
 formato = agora.strftime("%d/%m/%Y - %H:%M:%S")
+dadosData = date.today()
+
+# Achando o nome do mês atual:
+nomeMes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outrubro', 'Novembro', 'Dezembro']
+def pegandoMes(mes):
+  numeroMes = int(mes)-1
+  nome = nomeMes[numeroMes]
+  # print(nome)
+  return nome
+
+
+# Tratando Data:
+dataHoje = dadosData.day
+mesAtual = dadosData.month
+nomeDoMes = pegandoMes(mesAtual)
+anoAtual = dadosData.year
 #------
+pastaAno = anoAtual
+pastaMes = nomeDoMes
+pastaDia = dataHoje
 
 # Diretório onde o log será salvo
 log_directory = r"C:\LogAvisoRede"
 os.makedirs(log_directory, exist_ok=True)  # Cria o diretório se não existir
+#---
+log_directoryAno = fr"C:\LogAvisoRede\{pastaAno}"
+os.makedirs(log_directoryAno, exist_ok=True)  # Cria o diretório se não existir
+#---
+log_directoryMes = fr"C:\LogAvisoRede\{pastaAno}\{pastaMes}"
+os.makedirs(log_directoryMes, exist_ok=True)  # Cria o diretório se não existir
+#---
+log_directoryDia = fr"C:\LogAvisoRede\{pastaAno}\{pastaMes}\{pastaDia}"
+os.makedirs(log_directoryDia, exist_ok=True)  # Cria o diretório se não existir
 
 # Caminho completo do arquivo de log
-log_file_path = os.path.join(log_directory, "notificacoes.log")
+log_file_path = os.path.join(log_directoryDia, "notificacoes.log")
 
 # Configuração do logger
 logging.basicConfig(
