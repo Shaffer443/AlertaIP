@@ -3,6 +3,7 @@ from win10toast import ToastNotifier
 from datetime import datetime, date
 import logging
 import os
+import pytz
 
 
 app = Flask(__name__)
@@ -11,8 +12,11 @@ app = Flask(__name__)
 #    Inicializando notificações
 toaster = ToastNotifier()
 
+# Definir o fuso horário de Recife
+fuso_recife = pytz.timezone("America/Recife")
+
 # Obtém a data e o horário atual
-agora = datetime.now()
+agora = datetime.now(fuso_recife)
 
 # Formata a data e o horário no formato desejado
 formato = agora.strftime("%d/%m/%Y - %H:%M:%S")
@@ -81,6 +85,7 @@ def notificar():
 
 @app.route("/")
 def home():
+    #print(f"Servidor Flask para notificações de falha na rede está ativo! {formato}",200)
     return f"Servidor Flask para notificações de falha na rede está ativo! {formato}", 200
 
 
@@ -94,4 +99,4 @@ def home():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)  # Permite acesso externo
+    app.run(host='0.0.0.0', port=5000, debug=True)  # Permite acesso externo
